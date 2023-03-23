@@ -1,5 +1,5 @@
 ### CMAKE Template
-This project serves an example of how to setup a cmake project in what is
+This project serves as an example of how to setup a cmake project in what is
 hopefully a straight forward way, vs some of the other cmake examples that are
 out there.  cmake has so many options and can be difficult to debug it is easy
 to create a lot of bloat.
