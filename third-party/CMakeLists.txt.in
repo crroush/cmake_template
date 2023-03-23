@@ -1,0 +1,30 @@
+# CMakeLists.txt.in provides a simple interface to build dependencies.
+cmake_minimum_required(VERSION 3.22.0)
+project(third-party-download NONE)
+
+include(ExternalProject)
+include(ProcessorCount)
+
+# Avoid warning about DOWNLOAD_EXTRACT_TIMESTAMP in CMake 3.24:
+if (CMAKE_VERSION VERSION_GREATER_EQUAL "3.24.0")
+	cmake_policy(SET CMP0135 NEW)
+endif()
+
+# Install path for our dependencies
+set (DEPS_INSTALL_PREFIX @CMAKE_CURRENT_BINARY_DIR@/opt)
+
+# For parallel make -j
+ProcessorCount(NPROC)
+
+ExternalProject_Add(fftw-download
+  URL ${DEPS_DIR}/fftw-3.3.10.tar.gz
+  URL_HASH SHA256=56c932549852cddcfafdab3820b0200c7742675be92179e59e6215b340e26467
+  SOURCE_DIR        "@CMAKE_CURRENT_BINARY_DIR@/fftw-src"
+  BUILD_IN_SOURCE 1
+  CONFIGURE_COMMAND ./configure --prefix=${DEPS_INSTALL_PREFIX}/usr
+      --enable-threads --enable-sse2 --enable-avx2 --enable-single
+      --disable-fortran --disable-alloca
+  BUILD_COMMAND make -j${NPROC}
+  UPDATE_COMMAND    ""
+  TEST_COMMAND      ""
+)
